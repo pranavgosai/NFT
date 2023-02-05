@@ -1,16 +1,20 @@
-async function main() {
-  const MyNFT = await ethers.getContractFactory("myNFT");
+const hre = require("hardhat");
 
-  // Start deployment, returning a promise that resolves to a contract object
-  const myNFT = await MyNFT.deploy();
-  console.log("Contract deployed to address:", myNFT.address);
+async function main() {
+  const NAME = "AI Generated NFT"
+  const SYMBOL = "AINFT"
+  const COST = ethers.utils.parseUnits("1", "ether") // 1 ETH
+
+  const NFT = await hre.ethers.getContractFactory("NFT")
+  const nft = await NFT.deploy(NAME, SYMBOL, COST)
+  await nft.deployed()
+
+  console.log(`Deployed NFT Contract at: ${nft.address}`)
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
-
-  // 0xcb4C110C2652c403Fd0c3F4A20aE3a9FaEE6D5Be
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
